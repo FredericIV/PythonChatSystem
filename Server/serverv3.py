@@ -1,7 +1,9 @@
 import socket
-import thread
+import _thread
 import time
-import Queue
+import queue
+
+print("Running...")
 
 s = socket.socket()
 s.bind(( '', 4510))
@@ -11,12 +13,12 @@ t = socket.socket()
 t.bind(( '', 4511))
 t.listen(4)
 
-messages = Queue()
-messages1 = Queue()
-messages2 = Queue()
-messages3 = Queue()
-messages4 = Queue()
-messagesServer = Queue()
+messages = queue.Queue()
+messages1 = queue.Queue()
+messages2 = queue.Queue()
+messages3 = queue.Queue()
+messages4 = queue.Queue()
+messagesServer = queue.Queue()
 
 def r1(threadname, port):
    while True:
@@ -68,13 +70,13 @@ def s4(threadname, port):
             d.send(messages4.get(True))
          except socket.error as msg:
             d.close()
-thread.start_new_thread(r1, ("Felicity", 4510))
-thread.start_new_thread(r1, ("Jeanette", 4510))
-thread.start_new_thread(r1, ("Drew", 4510))
-thread.start_new_thread(r1, ("Frederic", 4510))
-thread.start_new_thread(s1, ("Felicity", 4511))
-thread.start_new_thread(s2, ("Jeanette", 4511))
-thread.start_new_thread(s3, ("Drew", 4511))
-thread.start_new_thread(s4, ("Frederic", 4511))
+_thread.start_new_thread(r1, ("Felicity", 4510))
+_thread.start_new_thread(r1, ("Jeanette", 4510))
+_thread.start_new_thread(r1, ("Drew", 4510))
+_thread.start_new_thread(r1, ("Frederic", 4510))
+_thread.start_new_thread(s1, ("Felicity", 4511))
+_thread.start_new_thread(s2, ("Jeanette", 4511))
+_thread.start_new_thread(s3, ("Drew", 4511))
+_thread.start_new_thread(s4, ("Frederic", 4511))
 while True:
    print(messagesServer.get(True))
