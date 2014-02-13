@@ -11,12 +11,12 @@ t = socket.socket()
 t.bind(( '', 4511))
 t.listen(4)
 
-messages = Queue.Queue()
-messages1 = Queue.Queue()
-messages2 = Queue.Queue()
-messages3 = Queue.Queue()
-messages4 = Queue.Queue()
-messagesServer = Queue.Queue()
+messages = Queue()
+messages1 = Queue()
+messages2 = Queue()
+messages3 = Queue()
+messages4 = Queue()
+messagesServer = Queue()
 
 def r1(threadname, port):
    while True:
@@ -77,4 +77,4 @@ thread.start_new_thread(s2, ("Jeanette", 4511))
 thread.start_new_thread(s3, ("Drew", 4511))
 thread.start_new_thread(s4, ("Frederic", 4511))
 while True:
-   print messagesServer.get(True)
+   print(messagesServer.get(True))
