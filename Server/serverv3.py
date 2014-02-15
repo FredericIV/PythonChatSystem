@@ -5,7 +5,8 @@ import queue
 
 
 try:
-   print("Running...")
+   if socket.gethostname() == "AlexAsus":
+      print("Running...")
 
    s = socket.socket()
    s.bind(( '', 4510))
@@ -16,70 +17,45 @@ try:
    t.listen(4)
 
    messages = queue.Queue()
-   messages1 = queue.Queue()
-   messages2 = queue.Queue()
-   messages3 = queue.Queue()
-   messages4 = queue.Queue()
-   messagesServer = queue.Queue()
 
    def r1(threadname, port):
       while True:
          c, addr = s.accept()
-         while True:
-            try:
-               got = str(c.recv(1024), "utf-8")
-            except socket.error as msg:
-               c.close()
-            if got == "exit":
-               c.close()
-               break
-            if not got:
-               print ("\a")
-            messages1.put(got)
-            messages2.put(got)
-            messages3.put(got)
-            messages4.put(got)
-            messagesServer.put(got)
+         _thread.start_new_thread(spawnedr1, ("Felicity", 4510))
+
+   def spawnedr1(threadname, port):
+      while True:
+         try:
+            got = str(c.recv(1024), "utf-8")
+         except socket.error as msg:
+            c.close()
+            break
+         except:
+            c.close()
+            break
+         if got == "exit":
+            c.close()
+            break
+         messages.put(got)
+
    def s1(threadname, port):
       while True:
          d, addr = t.accept()
-         while True:
-            try:
-               d.sendall(bytes(messages1.get(True), "utf-8"))
-            except socket.error as msg:
-               d.close()
-   def s2(threadname, port):
+         _thread.start_new_thread(spawneds1, ("Felicity", 4510))
+
+   def spawneds1(threadname, port):
       while True:
-         d, addr = t.accept()
-         while True:
-            try:
-               d.sendall(bytes(messages2.get(True), "utf-8"))
-            except socket.error as msg:
-               d.close()
-   def s3(threadname, port):
-      while True:
-         d, addr = t.accept()
-         while True:
-            try:
-               d.sendall(bytes(messages3.get(True), "utf-8"))
-            except socket.error as msg:
-               d.close()
-   def s4(threadname, port):
-      while True:
-         d, addr = t.accept()
-         while True:
-            try:
-               d.sendall(bytes(messages.get(True), "utf-8"))
-            except socket.error as msg:
-               d.close()
-   _thread.start_new_thread(r1, ("Felicity", 4510))
-   _thread.start_new_thread(r1, ("Jeanette", 4510))
-   _thread.start_new_thread(r1, ("Drew", 4510))
+         try:
+            d.sendall(bytes(messages1.get(True), "utf-8"))
+         except socket.error as msg:
+            d.close()
+            break
+         except:
+            d.close()
+            break
+
    _thread.start_new_thread(r1, ("Frederic", 4510))
-   _thread.start_new_thread(s1, ("Felicity", 4511))
-   _thread.start_new_thread(s2, ("Jeanette", 4511))
-   _thread.start_new_thread(s3, ("Drew", 4511))
-   _thread.start_new_thread(s4, ("Frederic", 4511))
+
    while True:
       print(messagesServer.get(True))
 finally:
