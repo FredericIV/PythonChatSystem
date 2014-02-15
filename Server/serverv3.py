@@ -17,13 +17,14 @@ try:
    t.listen(4)
 
    messages = queue.Queue()
+   messagesServer = queue.Queue()
 
    def r1(threadname, port):
       while True:
          c, addr = s.accept()
-         _thread.start_new_thread(spawnedr1, ("Felicity", 4510))
+         _thread.start_new_thread(spawnedr1, (c, 4510))
 
-   def spawnedr1(threadname, port):
+   def spawnedr1(c, port):
       while True:
          try:
             got = str(c.recv(1024), "utf-8")
@@ -37,13 +38,14 @@ try:
             c.close()
             break
          messages.put(got)
+         messagesServer.put(got)
 
    def s1(threadname, port):
       while True:
          d, addr = t.accept()
-         _thread.start_new_thread(spawneds1, ("Felicity", 4510))
+         _thread.start_new_thread(spawneds1, (d, 4510))
 
-   def spawneds1(threadname, port):
+   def spawneds1(d, port):
       while True:
          try:
             d.sendall(bytes(messages1.get(True), "utf-8"))
@@ -55,6 +57,7 @@ try:
             break
 
    _thread.start_new_thread(r1, ("Frederic", 4510))
+   _thread.start_new_thread(s1, ("Felicity", 4510))
 
    while True:
       print(messagesServer.get(True))
