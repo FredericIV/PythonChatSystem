@@ -16,7 +16,7 @@ try:
    t.bind(( '', 4511))
    t.listen(4)
 
-   messages = queue.Queue()
+   globalmessage =  ""
    messagesServer = queue.Queue()
 
    def r1(threadname, port):
@@ -37,7 +37,8 @@ try:
          if got == "exit":
             c.close()
             break
-         messages.put(got)
+         global globalmessage
+         globalmessage = got
          messagesServer.put(got)
 
    def s1(threadname, port):
@@ -46,13 +47,13 @@ try:
          _thread.start_new_thread(spawneds1, (d, 4510))
 
    def spawneds1(d, port):
+      old = ''
       while True:
          try:
-            d.sendall(bytes(messages1.get(True), "utf-8"))
+            if globalmessage != old:
+               old = globalmessage
+               d.sendall(bytes(globalmessage, "utf-8"))
          except socket.error as msg:
-            d.close()
-            break
-         except:
             d.close()
             break
 
