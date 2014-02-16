@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 import socket
 import _thread
 import tkinter
