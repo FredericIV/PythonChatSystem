@@ -1,11 +1,11 @@
-import socket               # Import socket module
+import socket
 import _thread
 import tkinter
+import time
 
 hostname = socket.gethostname()
 try:
-   print("Type exit to exit")
-   s = socket.socket()         # Create a socket object
+   s = socket.socket()
    go = input("Where would you like to connect to? ")
    try:
       s.connect((go, 4510))
@@ -22,9 +22,9 @@ try:
          except socket.error as msg:
             exit()
          if not got:
-            sys.exit(1)
+            exit(1)
          print(got)
-   def send():
+   def sender():
       if E1.get() == "exit":
          s.sendall(bytes("exit", "utf-8"))
          s.close()
@@ -32,7 +32,7 @@ try:
          exit()
       try:
          loss = E1.get()
-         google = str(hostname + "-- " + loss)
+         google = str(time.strftime("%H:%M:%S") + " " + hostname + " --" + loss)
          s.sendall(bytes(google, "utf-8"))
       except socket.error as msg:
          exit()
@@ -42,7 +42,7 @@ try:
    L1 = tkinter.Label(top, text="Say:")
    L1.pack( side = "left" )
    E1 = tkinter.Entry(top, relief="flat")
-   B = tkinter.Button(top, text ="Send", command = send)
+   B = tkinter.Button(top, text ="Send", command = sender)
    B.pack( side = "right" )
    E1.pack( fill="both" )
    top.mainloop()
