@@ -1,13 +1,12 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 import socket
 import _thread
 import time
 import queue
 
 
-try:
-   if socket.gethostname() == "AlexAsus":
-      print("Running...")
+try: #My way of catching all errors gracefully
+   print("Running...")
 
    s = socket.socket()
    s.bind(( '', 4510))
@@ -20,12 +19,12 @@ try:
    globalmessage =  ""
    messagesServer = queue.Queue()
 
-   def r1(threadname, port):
+   def r1(threadname, port): #Accepts handshakes and spawns a thread to receive communications.
       while True:
          c, addr = s.accept()
          _thread.start_new_thread(spawnedr1, (c, 4510))
 
-   def spawnedr1(c, port):
+   def spawnedr1(c, port): #Thread script that recive communications
       while True:
          try:
             got = str(c.recv(1024), "utf-8")
@@ -42,12 +41,12 @@ try:
          globalmessage = got
          messagesServer.put(got)
 
-   def s1(threadname, port):
+   def s1(threadname, port): #Accepts handshakes and spawns a thread to send messages.
       while True:
          d, addr = t.accept()
          _thread.start_new_thread(spawneds1, (d, 4510))
 
-   def spawneds1(d, port):
+   def spawneds1(d, port): #Sends messages received
       old = ''
       while True:
          try:
@@ -58,13 +57,17 @@ try:
             d.close()
             break
 
-   _thread.start_new_thread(r1, ("Frederic", 4510))
+   _thread.start_new_thread(r1, ("Frederic", 4510)) #Starts Spawners.
    _thread.start_new_thread(s1, ("Felicity", 4510))
 
    while True:
       print(messagesServer.get(True))
 finally:
-   s.shutdown(socket.SHUT_RDWR)
-   s.close()
-   t.shutdown(socket.SHUT_RDWR)
-   t.close()
+   try:
+      s.shutdown(socket.SHUT_RDWR)
+      s.close()
+      t.shutdown(socket.SHUT_RDWR)
+      t.close()
+      exit()
+   finally:
+      exit()

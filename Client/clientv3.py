@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 import socket
 import _thread
 import tkinter
@@ -7,7 +7,7 @@ import time
 hostname = socket.gethostname()
 try:
    s = socket.socket()
-   go = input("Where would you like to connect to? ")
+   go = "alexasus"
    try:
       s.connect((go, 4510))
    except socket.error as msg:
@@ -26,6 +26,7 @@ try:
             exit(1)
          print(got)
    def sender():
+      old = ""
       if E1.get() == "exit":
          s.sendall(bytes("exit", "utf-8"))
          s.close()
@@ -33,8 +34,10 @@ try:
          exit()
       try:
          loss = E1.get()
-         google = str(time.strftime("%H:%M:%S") + " " + hostname + " --" + loss)
-         s.sendall(bytes(google, "utf-8"))
+         google = str(time.strftime("%H:%M:%S") + " " + hostname + "-- " + loss)
+         if google != old:
+            s.sendall(bytes(google, "utf-8"))
+            old = google
       except socket.error as msg:
          exit()
    _thread.start_new_thread(r1, ("world", "FredericIV"))
@@ -48,9 +51,12 @@ try:
    E1.pack( fill="both" )
    top.mainloop()
 finally:
-   s.sendall(bytes("exit", "utf-8"))
-   s.shutdown(socket.SHUT_RDWR)
-   s.close()
-   e.shutdown(socket.SHUT_RDWR)
-   e.close()
-   exit()
+   try:
+      s.sendall(bytes("exit", "utf-8"))
+      s.shutdown(socket.SHUT_RDWR)
+      s.close()
+      e.shutdown(socket.SHUT_RDWR)
+      e.close()
+      exit()
+   finally:
+      exit()
