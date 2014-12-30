@@ -25,6 +25,11 @@ try: #My way of catching all errors gracefully
          _thread.start_new_thread(spawnedr1, (c, 4510))
 
    def spawnedr1(c, port): #Thread script that recive communications
+      hostname=str(c.recv(1024), "utf-8")
+      got = '{hostname} has entered the chatroom.'.format(hostname=hostname)
+      global globalmessage
+      globalmessage = got
+      messagesServer.put(got)
       while True:
          try:
             got = str(c.recv(1024), "utf-8")
@@ -35,11 +40,13 @@ try: #My way of catching all errors gracefully
             c.close()
             break
          if got == "exit":
+            got = '{hostname} has exited the chatroom.'.format(hostname=hostname)
+            globalmessage = got
+            messagesServer.put(got)
             c.close()
             break
-         global globalmessage
-         globalmessage = got
-         messagesServer.put(got)
+         globalmessage = str(time.strftime("%H:%M:%S") + " " + hostname + "-- " + got)
+         messagesServer.put(str(time.strftime("%H:%M:%S") + " " + hostname + "-- " + got))
 
    def s1(threadname, port): #Accepts handshakes and spawns a thread to send messages.
       while True:

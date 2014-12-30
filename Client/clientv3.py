@@ -5,15 +5,19 @@ import tkinter
 import time
 
 hostname = socket.gethostname()
+old = ""
 try:
+
    s = socket.socket()
-   go = "alexasus"
+   go = "FredericArch"
    try:
       s.connect((go, 4510))
    except socket.error as msg:
       print("Fail on connection.")
       input("")
       exit()
+   s.sendall(bytes(hostname, "utf-8"))
+
    e = socket.socket()
    e.connect((go, 4511))
    def r1(randomis, threadname):
@@ -26,7 +30,7 @@ try:
             exit(1)
          print(got)
    def sender():
-      old = ""
+      global old
       if E1.get() == "exit":
          s.sendall(bytes("exit", "utf-8"))
          s.close()
@@ -34,10 +38,9 @@ try:
          exit()
       try:
          loss = E1.get()
-         google = str(time.strftime("%H:%M:%S") + " " + hostname + "-- " + loss)
-         if google != old:
-            s.sendall(bytes(google, "utf-8"))
-            old = google
+         if time.strftime("%H:%M:%S") != old:
+            s.sendall(bytes(loss, "utf-8"))
+            old = time.strftime("%H:%M:%S")
       except socket.error as msg:
          exit()
    _thread.start_new_thread(r1, ("world", "FredericIV"))
