@@ -12,12 +12,6 @@ while True:
     Recived = s.recv(1024)
     if Recived == "exit ":
         break
-    elif Recived == "update ":
-        s.send(version)
-    elif Recived == "about ":
-        s.send(version)
-    elif Recived == "version ":
-        s.send(version)
     if Recived != "exit ":
         if Recived != "update ":
             if Recived != "about ":
