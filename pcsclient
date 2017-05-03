@@ -5,6 +5,7 @@ import time
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 hostname = socket.gethostname()
 old = ""
 try:

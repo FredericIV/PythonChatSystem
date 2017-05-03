@@ -25,7 +25,6 @@ try: #My way of catching all errors gracefully
    inlock = threading.Lock()
    spawncount = 0
    inbarrier = threading.Barrier(spawncount, )
-
    def r1(threadname, port): #Accepts handshakes and spawns a thread to receive communications.
       while True:
          c, addr = s.accept()
