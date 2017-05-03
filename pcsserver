@@ -19,7 +19,7 @@ try: #My way of catching all errors gracefully
    print("Connected")
    globalmessage =  ""
    messagesServer = queue.Queue()
-   
+
    innote = threading.Event()
    outnote = threading.Event()
    inlock = threading.Lock()
@@ -43,12 +43,16 @@ try: #My way of catching all errors gracefully
       globalmessage = got
       messagesServer.put(got)
       while True:
+         print("Begin Loop.")
          try:
+            print("Got.")
             got = str(c.recv(1024), "utf-8")
          except socket.error as msg:
+            print("Except 1.")
             c.close()
             break
          except:
+            print("Except 2.")
             c.close()
             break
          if got == "exit":

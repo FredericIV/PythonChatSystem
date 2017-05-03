@@ -2,25 +2,26 @@
 import socket
 import _thread
 import time
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 hostname = socket.gethostname()
 old = ""
 try:
 
-   s = socket.socket()
-   go = "FredericArch"
-   try:
+    s = socket.socket()
+    go = "localhost"
+    try:
       s.connect((go, 4510))
-   except socket.error as msg:
+    except socket.error as msg:
       print("Fail on connection.")
       exit()
-   s.sendall(bytes(hostname, "utf-8"))
+    s.sendall(bytes(hostname, "utf-8"))
 
-   e = socket.socket()
-   e.connect((go, 4511))
+    e = socket.socket()
+    e.connect((go, 4511))
 
-   def r1(randomis, threadname):
+    def r1(randomis, threadname):
       while True:
          try:
             got = str(e.recv(1024), "utf-8")
@@ -29,8 +30,7 @@ try:
          if not got:
             exit(1)
          ui.textEdit.append(got)
-
-   class Ui_PCS(object):
+    class Ui_PCS(object):
       def setupUi(self, PCS):
          PCS.setObjectName("PCS")
          PCS.resize(395, 296)
@@ -59,9 +59,7 @@ try:
 
       def senderui(self, PCS):
          global old
-         print("1")
          textvar = self.lineEdit.text()
-         print("2")
          if textvar == "exit":
             s.sendall(bytes("exit", "utf-8"))
             s.close()
@@ -81,14 +79,13 @@ try:
          self.pushButton.setText(_translate("PCS", "Send"))
          self.actionSendMessage.setText(_translate("PCS", "SendMessage"))
          self.actionSendMessage.setShortcut(_translate("PCS", "Return"))
-
-   app = QtWidgets.QApplication(sys.argv)
-   window = QtWidgets.QDialog()
-   ui = Ui_PCS()
-   ui.setupUi(window)
-   _thread.start_new_thread(r1, ("PCS", "FredericIV"))
-   window.show()
-   app.exec_()
+    app = QtWidgets.QApplication(sys.argv)
+    window = QtWidgets.QDialog()
+    ui = Ui_PCS()
+    ui.setupUi(window)
+    _thread.start_new_thread(r1, ("PCS", "FredericIV"))
+    window.show()
+    app.exec_()
 finally:
    try:
       s.sendall(bytes("exit", "utf-8"))
