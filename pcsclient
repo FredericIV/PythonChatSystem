@@ -1,26 +1,28 @@
 #!/usr/bin/python3
 import socket
 import _thread
-import tkinter
 import time
+import sys
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 hostname = socket.gethostname()
 old = ""
 try:
 
-   s = socket.socket()
-   go = "FredericArch"
-   try:
+    s = socket.socket()
+    go = "localhost"
+    try:
       s.connect((go, 4510))
-   except socket.error as msg:
+    except socket.error as msg:
       print("Fail on connection.")
-      input("")
       exit()
-   s.sendall(bytes(hostname, "utf-8"))
+    s.sendall(bytes(hostname, "utf-8"))
 
-   e = socket.socket()
-   e.connect((go, 4511))
-   def r1(randomis, threadname):
+    e = socket.socket()
+    e.connect((go, 4511))
+
+    def r1(randomis, threadname):
       while True:
          try:
             got = str(e.recv(1024), "utf-8")
@@ -28,31 +30,63 @@ try:
             exit()
          if not got:
             exit(1)
-         print(got)
-   def sender():
-      global old
-      if E1.get() == "exit":
-         s.sendall(bytes("exit", "utf-8"))
-         s.close()
-         e.close()
-         exit()
-      try:
-         loss = E1.get()
-         if time.strftime("%H:%M:%S") != old:
-            s.sendall(bytes(loss, "utf-8"))
-            old = time.strftime("%H:%M:%S")
-      except socket.error as msg:
-         exit()
-   _thread.start_new_thread(r1, ("world", "FredericIV"))
-   top = tkinter.Tk()
-   top.title("Chat Entry")
-   L1 = tkinter.Label(top, text="Say:")
-   L1.pack( side = "left" )
-   E1 = tkinter.Entry(top, relief="flat")
-   B = tkinter.Button(top, text ="Send", command = sender)
-   B.pack( side = "right" )
-   E1.pack( fill="both" )
-   top.mainloop()
+         ui.textEdit.append(got)
+    class Ui_PCS(object):
+      def setupUi(self, PCS):
+         PCS.setObjectName("PCS")
+         PCS.resize(395, 296)
+         self.gridLayout = QtWidgets.QGridLayout(PCS)
+         self.gridLayout.setObjectName("gridLayout")
+         self.lineEdit = QtWidgets.QLineEdit(PCS)
+         self.lineEdit.setObjectName("lineEdit")
+         self.gridLayout.addWidget(self.lineEdit, 2, 0, 1, 1)
+         self.pushButton = QtWidgets.QPushButton(PCS)
+         self.pushButton.setObjectName("pushButton")
+         self.gridLayout.addWidget(self.pushButton, 2, 1, 1, 1)
+         self.textEdit = QtWidgets.QTextEdit(PCS)
+         self.textEdit.LineWrapMode(1)
+         self.textEdit.setReadOnly(True)
+         self.textEdit.setObjectName("textEdit")
+         self.textEdit.setText("")
+         self.gridLayout.addWidget(self.textEdit, 1, 0, 1, 2)
+         self.actionSendMessage = QtWidgets.QAction(PCS)
+         self.actionSendMessage.setObjectName("actionSendMessage")
+
+         self.retranslateUi(PCS)
+         QtCore.QMetaObject.connectSlotsByName(PCS)
+         self.pushButton.clicked.connect(self.senderui)
+         self.actionSendMessage.triggered.connect(self.senderui)
+
+
+      def senderui(self, PCS):
+         global old
+         textvar = self.lineEdit.text()
+         if textvar == "exit":
+            s.sendall(bytes("exit", "utf-8"))
+            s.close()
+            e.close()
+            exit()
+         try:
+            if time.strftime("%H:%M:%S") != old:
+               s.sendall(bytes(textvar, "utf-8"))
+               old = time.strftime("%H:%M:%S")
+         except socket.error as msg:
+            exit()
+         self.lineEdit.clear()
+
+      def retranslateUi(self, PCS):
+         _translate = QtCore.QCoreApplication.translate
+         PCS.setWindowTitle(_translate("PCS", "PCS"))
+         self.pushButton.setText(_translate("PCS", "Send"))
+         self.actionSendMessage.setText(_translate("PCS", "SendMessage"))
+         self.actionSendMessage.setShortcut(_translate("PCS", "Return"))
+    app = QtWidgets.QApplication(sys.argv)
+    window = QtWidgets.QDialog()
+    ui = Ui_PCS()
+    ui.setupUi(window)
+    _thread.start_new_thread(r1, ("PCS", "FredericIV"))
+    window.show()
+    app.exec_()
 finally:
    try:
       s.sendall(bytes("exit", "utf-8"))
